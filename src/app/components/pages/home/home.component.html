@@ -1,0 +1,8 @@
+<div class="home-wrapper">
+  <div class="cta-tools-row">
+    <app-search [queryItems]="products | async" [queryByPropNames]="searchByProps" (onSearch)="handleSearch($event)" (onAbortSearch)="handleAbortSearch()"></app-search>
+    <button class="brand-btn">Agregar</button>
+  </div>
+  <app-products-table [products]="products | async" *ngIf="!isSearchActive"></app-products-table>
+  <app-products-table [products]="searchedProducts | async" *ngIf="isSearchActive"></app-products-table>
+</div>

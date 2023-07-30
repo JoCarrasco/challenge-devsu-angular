@@ -1,0 +1,51 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  thead th  {
+    background-color: #f5f5f5;
+    span {
+      color: #555555!important;
+    }
+  }
+  th,td {
+    padding: 16px;
+    text-align: center;
+    fa-icon { 
+      margin-left: 6px;
+      &:hover{
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.amount-text {
+  margin-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+  .table {
+    width: 100%;
+  }
+
+  .table th,
+  .table td {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+}
+
+.product-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+  }
+}
