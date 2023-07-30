@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { IApiProduct } from 'src/app/models/api.models';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -16,7 +17,7 @@ export class HomeComponent {
 
   isSearchActive: boolean = false;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService, private router: Router) {
     
   }
 
@@ -25,6 +26,10 @@ export class HomeComponent {
       this.searchedProducts = of(result);
       this.isSearchActive = true;
     }
+  }
+
+  handleAddNewProduct(): void {
+    this.router.navigate(['product/create']);
   }
 
   handleAbortSearch() {

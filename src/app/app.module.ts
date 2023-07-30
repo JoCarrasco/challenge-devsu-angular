@@ -8,18 +8,33 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { ProductsTableComponent } from './components/core/products-table/products-table.component';
 import { SearchComponent } from './components/core/search/search.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductFormComponent } from './components/core/product-form/product-form.component';
+import { ProductCreateComponent } from './components/pages/product-create/product-create.component';
+
+const components = [
+  SearchComponent,
+  ProductsTableComponent,
+  ProductFormComponent
+]
+
+const pages = [
+  HomeComponent,
+  ProductCreateComponent,
+]
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    ProductsTableComponent,
-    SearchComponent,
+    ...components,
+    ...pages
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     StoreModule.forRoot({}, {}),
     FontAwesomeModule
   ],

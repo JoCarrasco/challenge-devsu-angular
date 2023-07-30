@@ -1,0 +1,25 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 50px;
+}
+
+
+.form-wrapper {
+  padding: 0 30px;
+  h1 {
+    text-align: center;
+  }
+  hr {
+    margin-top: 20px;
+    height: 15px;
+    background-color: #dbdbdb;
+    border: none;
+    margin-bottom: 40px;
+  }
+}
