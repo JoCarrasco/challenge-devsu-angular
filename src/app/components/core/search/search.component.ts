@@ -47,7 +47,7 @@ export class SearchComponent {
    * Handles the event when the user aborts the search.
    */
   handleAbortSearch() {
-    this.onAbortSearch.next();
+    this.onAbortSearch.emit();
   }
 
   /**
@@ -82,6 +82,6 @@ export class SearchComponent {
     });
 
     // Emit the search results.
-    this.onSearch.next(filtered.length > 0 ? filtered : undefined);
+    this.onSearch.emit(filtered.length > 0 ? filtered : undefined);
   }
 }

@@ -4,30 +4,49 @@ import { SearchComponent } from './search.component';
 describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
-  let onSearchSpy: jasmine.Spy;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SearchComponent],
-    });
+      declarations: [SearchComponent]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
-
-    onSearchSpy = spyOn(component.onSearch, 'emit');
-  });
-
-  it('should initialize the component with the default values', () => {
-    expect(component.queryItems).toEqual([]);
-    expect(component.queryByPropNames).toEqual([]);
-  });
-
-  it('should filter the query items when the search input changes', () => {
-    component.queryItems = ['item1', 'item2', 'item3'];
-    component.queryByPropNames = ['name'];
-
-    component.handleInputChange('item');
     fixture.detectChanges();
+  });
 
-    expect(onSearchSpy).toHaveBeenCalledWith(['item1', 'item2']);
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should emit onAbortSearch event when handleAbortSearch is called', () => {
+    spyOn(component.onAbortSearch, 'emit');
+    component.handleAbortSearch();
+    fixture.detectChanges();
+    expect(component.onAbortSearch.emit).toHaveBeenCalled();
+  });
+  
+  it('should filter queryItems and emit onSearch event when handleInputChange is called', () => {
+    spyOn(component.onSearch, 'emit');
+    const mockQueryItems = [
+      { name: 'Apple', category: 'Fruit' },
+      { name: 'Banana', category: 'Fruit' },
+      { name: 'Carrot', category: 'Vegetable' },
+    ];
+    component.queryItems = mockQueryItems;
+    component.queryByPropNames = ['name'];
+    const val = 'ap';
+    component.handleInputChange(val);
+    fixture.detectChanges()
+    expect(component.onSearch.emit).toHaveBeenCalledWith([mockQueryItems[0]]);
+  });
+  
+  it('should not emit onSearch event when handleInputChange is called with empty input', () => {
+    spyOn(component.onSearch, 'emit');
+    component.handleInputChange('');
+    fixture.detectChanges();
+    expect(component.onSearch.emit).not.toHaveBeenCalled();
   });
 });
