@@ -1,10 +1,14 @@
-.brand-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  .brand {
-    max-width: 220px; 
+.app-wrapper {
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  .brand-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    .brand {
+      max-width: 220px; 
+    }
+    padding: 40px 0;
   }
-  margin: 40px 0;
 }

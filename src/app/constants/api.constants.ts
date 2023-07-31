@@ -25,3 +25,11 @@ export const PRODUCTS_ROUTE: string = `${API_URL}/bp/products`;
  * @returns {string} The URL for the target product endpoint.
  */
 export const PRODUCT_ROUTE = (id: string): string => `${PRODUCTS_ROUTE}?id=${id}`;
+
+/**
+ * The route for the target product ID verification endpoint.
+ *
+ * @param {string} id The ID of the product to verify.
+ * @returns {string} The URL for the target product ID verification endpoint.
+ */
+export const PRODUCT_ID_VERIFY_ROUTE = (id: string): string => `${PRODUCTS_ROUTE}/verification?id=${id}`;

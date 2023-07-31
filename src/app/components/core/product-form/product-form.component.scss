@@ -1,25 +1,45 @@
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 50px;
-}
-
-
 .form-wrapper {
+  form {
+    max-width: 800px;
+    margin: auto;
+  }
   padding: 0 30px;
   h1 {
     text-align: center;
   }
   hr {
     margin-top: 20px;
-    height: 15px;
+    height: 10px;
     background-color: #dbdbdb;
     border: none;
     margin-bottom: 40px;
+  }
+  .fields-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 50px;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      .form-control.ds {
+        cursor:default;
+      }
+      .error-wrapper   {
+        margin-top: 5px;
+        & > * {   
+          color: red;
+          font-weight: bolder;
+        }
+      }
+    }
+    
+  }
+  .cta-group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    button {
+      margin: 20px;
+    }
   }
 }

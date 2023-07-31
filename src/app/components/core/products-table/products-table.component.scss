@@ -1,5 +1,7 @@
 .table {
+  background-color: white;
   width: 100%;
+  border-radius: 10px;
   border-collapse: collapse;
   border: 2px solid #ddd;
   border-radius: 5px;
@@ -21,8 +23,26 @@
   }
 }
 
-.amount-text {
+.options-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #1b1b1b;
+  border-radius: 5px;
+  padding: 5px 10px;
+  right: 85px;
+}
+
+.pagination {
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px 10px;
+  display: flex;
+  justify-content: space-between;
   margin-top: 20px;
+  select {
+    padding: 5px 15px;
+    border-radius: 5px;
+  }
 }
 
 

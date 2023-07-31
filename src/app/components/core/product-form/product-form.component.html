@@ -1,36 +1,83 @@
 <div class="form-wrapper">
-  <h1>Formulario de Registro</h1>
-  <hr>
-  <form [formGroup]="productForm">
-    <div class="form-group brand-field">
-      <label for="id">ID</label>
-      <input type="text" formControlName="id" class="form-control" readonly>
+  <h1>Formulario de {{ product !== undefined ? 'Actualizacion' : 'Registro'}}</h1>
+  <form [formGroup]="productForm" (ngSubmit)="handleSubmit()">
+    <hr>
+    <div class="fields-wrapper">
+      <div class="form-group brand-field {{ product !== undefined ? 'ds' : '' }}">
+        <label for="id">ID</label>
+        <input type="text" formControlName="id" class="form-control" required [readonly]="product !== undefined ? true : false" [disabled]="true">
+        <div class="error-wrapper" *ngIf="id?.invalid">
+          <div *ngIf="id?.errors?.['required']">
+            El ID es requerido.
+          </div>
+          <div *ngIf="id?.errors?.['validId']">
+            El ID es invalido/existente.
+          </div>
+          <div *ngIf="id?.errors?.['minlength']">
+            El ID deberia de tener minimo 5 caracteres.
+          </div>
+          <div *ngIf="id?.errors?.['maxlength']">
+            El ID deberia de tener maximo 10 caracteres.
+          </div>
+        </div>
+      </div>
+      <div class="form-group brand-field">
+        <label for="name">Nombre</label>
+        <input type="text" formControlName="name" class="form-control" required>
+        <div class="error-wrapper" *ngIf="name?.invalid">
+          <div *ngIf="name?.errors?.['required']">
+            El Nombre es requerido.
+          </div>
+          <div *ngIf="name?.errors?.['minlength']">
+            El Nombre deberia de tener minimo 5 caracteres.
+          </div>
+          <div *ngIf="name?.errors?.['maxlength']">
+            El Nombre deberia de tener maximo 100 caracteres.
+          </div>
+        </div>
+      </div>
+      <div class="form-group brand-field">
+        <label for="description">Descripción</label>
+        <input type="text" formControlName="description" class="form-control" required>
+        <div class="error-wrapper" *ngIf="description?.invalid">
+          <div *ngIf="description?.errors?.['required']">
+            La Descripcion es requerida.
+          </div>
+          <div *ngIf="description?.errors?.['minlength']">
+            La Descripcion deberia de tener minimo 10 caracteres.
+          </div>
+          <div *ngIf="description?.errors?.['maxlength']">
+            La Descripcion deberia de tener maximo 200 caracteres.
+          </div>
+        </div>
+      </div>
+      <div class="form-group brand-field">
+        <label for="logoUrl">Logo</label>
+        <input type="text" formControlName="logo" class="form-control" required>
+        <div class="error-wrapper" *ngIf="logo?.invalid">
+          <div *ngIf="logo?.errors?.['required']">
+            La URL del Logo es requerida.
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-group brand-field">
+        <label for="revisionDate">Fecha de Liberacion</label>
+        <input type="date" formControlName="date_release" [min]="product === undefined ? today : null" class="form-control" required (change)="updateReleaseDate()">
+        <div class="error-wrapper" *ngIf="date_release?.invalid">
+          <div *ngIf="date_release?.errors?.['required']">
+            La Fecha de Liberacion es requerida.
+          </div>
+        </div>
+      </div>
+      <div class="form-group brand-field ds">
+        <label for="releaseDate">Fecha de Revision</label>
+        <input type="date" formControlName="date_revision" class="form-control" readonly [disabled]="true" (onkeydown)="false" required>
+      </div>
     </div>
-    <div class="form-group brand-field">
-      <label for="name">Nombre</label>
-      <input type="text" formControlName="name" class="form-control" required>
+    <div class="cta-group">
+      <button class="brand-btn alt-btn" (click)="handleReset()">Reiniciar</button>
+      <button type="submit" class="brand-btn" [disabled]="!this.productForm.valid">{{ product !== undefined ? 'Actualizar' : 'Enviar' }}</button>
     </div>
-    <div class="form-group brand-field">
-      <label for="description">Descripción</label>
-      <input type="text" formControlName="description" class="form-control" required>
-    </div>
-  
-  
-    <div class="form-group brand-field">
-      <label for="logoUrl">Logo</label>
-      <input type="text" formControlName="logo" class="form-control" required>
-    </div>
-  
-    <div class="form-group brand-field">
-      <label for="revisionDate">Fecha de Revision</label>
-      <input type="date" formControlName="date_revision" class="form-control" required>
-    </div>
-  
-    <div class="form-group brand-field ds">
-      <label for="releaseDate">Fecha de Reestructuración</label>
-      <input type="date" formControlName="date_release" class="form-control" readonly [disabled]="true" (onkeydown)="false">
-    </div>
-  
-    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>

@@ -11,12 +11,34 @@
   border: 2px solid #555555;
 }
 
+.brand-btn {
+  padding: 17px 30px;
+  border: none;
+  border-radius: 10px;
+  color: #0c305a;
+  font-weight: bolder;
+  font-size: 17px;
+  background-color: #ffe008;
+  &:disabled {
+    background-color: #fff8ca;
+    color: gray;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &.alt-btn {
+    background-color: #e9ecf3;
+  }
+}
+
 .brand-field {
+  margin-bottom: 10px;
   &.ds {
     * {
       color: gray;
     }
     input {
+      cursor: default;
       border: 1px solid gray;
       
       &:focus {
@@ -24,6 +46,9 @@
       }
       // background-color: gray;
     }
+  }
+  label {
+    margin-bottom: 5px;
   }
   input {
     font-size: 18px;

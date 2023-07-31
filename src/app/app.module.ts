@@ -11,7 +11,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductFormComponent } from './components/core/product-form/product-form.component';
 import { ProductCreateComponent } from './components/pages/product-create/product-create.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ProductDetailComponent } from './components/pages/product-detail/product-detail.component';
 
 const components = [
   SearchComponent,
@@ -28,7 +29,8 @@ const pages = [
   declarations: [
     AppComponent,
     ...components,
-    ...pages
+    ...pages,
+    ProductDetailComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +42,7 @@ const pages = [
     StoreModule.forRoot({}, {}),
     FontAwesomeModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
