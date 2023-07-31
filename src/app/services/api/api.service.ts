@@ -20,7 +20,7 @@ export class ApiService {
   error = this.error$.asObservable();
   errorExists = this.error.pipe(switchMap((ob) => iif(() => ob === null, of(false), of(true))));
   
-  readonly products$ = this.getProducts();
+  products$ = this.getProducts();
 
   constructor(private http: HttpClient) { }
   

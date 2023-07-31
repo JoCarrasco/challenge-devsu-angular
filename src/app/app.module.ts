@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductFormComponent } from './components/core/product-form/product-form.component';
 import { ProductCreateComponent } from './components/pages/product-create/product-create.component';
+import { CommonModule } from '@angular/common';
 
 const components = [
   SearchComponent,
@@ -30,6 +31,7 @@ const pages = [
     ...pages
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
