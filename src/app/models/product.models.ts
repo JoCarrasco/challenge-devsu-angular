@@ -1,11 +1,4 @@
-/**
- * @interface IBaseEntity
- * @description The base interface for all entities.
- * @property {string} id The unique identifier for the entity.
- */
-interface IBaseEntity {
-  id: string;
-}
+import { IBaseEntity } from "./core.models";
 
 /**
  * @interface IApiProduct
@@ -17,10 +10,11 @@ interface IBaseEntity {
  * @property {string} date_release The date the product was released.
  * @property {string} date_revision The date the product was revised.
  */
-export interface IApiProduct extends IBaseEntity {
+export interface IProduct extends IBaseEntity {
   name: string;
   description: string;
-  logo: string;
   date_release: string;
   date_revision: string;
+  logo: string;
 }
+

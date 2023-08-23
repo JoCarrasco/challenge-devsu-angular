@@ -1,26 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-
-/**
- * This function normalizes a string by replacing allaccented characters with their lowercase counterparts.
- * @param val The string to be normalized.
- * @returns The normalized string.
- */
-function normalizeTxt(val: string) {
-  val = val.replace(/[áàãâä]/g, 'a');
-  val = val.replace(/[ÁÀÃÂÄ]/g, 'a');
-  val = val.replace(/[éèêë]/g, 'e');
-  val = val.replace(/[ÉÈÊË]/g, 'e');
-  val = val.replace(/[íìîï]/g, 'i');
-  val = val.replace(/[ÍÌÎÏ]/g, 'i');
-  val = val.replace(/[óòõôö]/g, 'o');
-  val = val.replace(/[ÓÒÕÔÖ]/g, 'o');
-  val = val.replace(/[úùûü]/g, 'u');
-  val = val.replace(/[ÚÙÛÜ]/g, 'u');
-  val = val.replace(/[ç]/g, 'c');
-  val = val.replace(/[Ç]/g, 'c');
-  return val.toLowerCase();
-}
+import { OperationsHelper } from 'src/app/classes/operations';
 
 @Component({
   selector: 'app-search',
@@ -69,19 +49,8 @@ export class SearchComponent {
     }
 
     // Filter the query items based on the search input value.
-    const filtered = this.queryItems.filter((item) => {
-      let isMatch: boolean = false;
-      for (let index = 0; index < this.queryByPropNames!.length; index++) {
-        const value: string = item[this.queryByPropNames![index]];
-        const isCurrentPropMatch = normalizeTxt(value).includes(normalizeTxt(val));
-        if (isCurrentPropMatch) {
-          isMatch = true;
-        }
-      }
-      return isMatch;
-    });
-
+    const filtered = OperationsHelper.searchByPropNames<any>(val, this.queryItems, this.queryByPropNames);
     // Emit the search results.
-    this.onSearch.emit(filtered.length > 0 ? filtered : undefined);
+    this.onSearch.emit(filtered);
   }
 }

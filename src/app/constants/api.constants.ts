@@ -33,3 +33,9 @@ export const PRODUCT_ROUTE = (id: string): string => `${PRODUCTS_ROUTE}?id=${id}
  * @returns {string} The URL for the target product ID verification endpoint.
  */
 export const PRODUCT_ID_VERIFY_ROUTE = (id: string): string => `${PRODUCTS_ROUTE}/verification?id=${id}`;
+
+export const PRODUCTS_ENDPOINTS = {
+  products: PRODUCTS_ROUTE,
+  product: PRODUCT_ROUTE,
+  productVerify: PRODUCT_ID_VERIFY_ROUTE
+};

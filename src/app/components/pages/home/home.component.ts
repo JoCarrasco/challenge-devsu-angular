@@ -1,45 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IApiProduct } from 'src/app/models/api.models';
-import { ApiService } from 'src/app/services/api/api.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ProductService } from '../../../services';
+import { IProductsTableComponentOnItemAction, OnItemActionType } from '../../core/products-table/products-table.component';
+import { IProduct } from 'src/app/models';
 
 @Component({
   selector: 'app-home',
-  template: `
-    <div class="home-wrapper">
-      <div class="cta-tools-row">
-        <app-search [queryItems]="products" [queryByPropNames]="searchByProps" (onSearch)="handleSearch($event)" (onAbortSearch)="handleAbortSearch()"></app-search>
-        <button class="brand-btn" (click)="handleAddNewProduct()">Agregar</button>
-      </div>
-      <app-products-table class="products-table" [products]="products" *ngIf="!isSearchActive"></app-products-table>
-      <app-products-table class="searched-products-table" [products]="searchedProducts" *ngIf="isSearchActive"></app-products-table>
-    </div>
-  `,
+  templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private onDeleteSubscription: Subscription | null = null;
+  private initializationSubscription: Subscription | null = null;
   searchByProps = ['name', 'description'];
 
-  products: IApiProduct[] = [];
-  searchedProducts: IApiProduct[] = [];
+  private streamOfProducts$ = new BehaviorSubject<IProduct[] | null>(null);
+  private streamOfSearchedProducts$ = new BehaviorSubject<IProduct[] | null>(null);
+  products$ = this.streamOfProducts$.asObservable();
+  searchedProducts$ = this.streamOfSearchedProducts$.asObservable();
 
   isSearchActive: boolean = false;
 
-  constructor(private api: ApiService, public router: Router) { }
+  constructor(private productService: ProductService, public router: Router) { }
 
-  ngOnInit(): void {
-    this.api.products$.subscribe((res) => {
-      if (res !== null) {
-        this.products = res;
-      }
-    })
-
-    this.api.updateProductsObs();
+  handleItemAction(itemAction: IProductsTableComponentOnItemAction) {
+    if (itemAction.action === OnItemActionType.Edit) {
+      this.router.navigate([`product/${itemAction.id}`]);
+    } else if (itemAction.action === OnItemActionType.Delete) {
+      this.onDeleteSubscription = this.productService.deleteProduct$(itemAction.id).subscribe((res) => {
+       //
+      }, (err) => {
+        if (err.status === 200) {
+          this.updateProductStream();
+        }
+      });
+    }
   }
 
-  handleSearch(result: IApiProduct[] | undefined) {
+  private updateProductStream() {
+    if (this.initializationSubscription) {
+      this.initializationSubscription.unsubscribe();
+    }
+
+    this.initializationSubscription = this.productService.getProducts$().subscribe((res) => {
+      this.streamOfProducts$.next(res);
+    })
+  }
+
+  ngOnInit(): void {
+    this.updateProductStream();
+  }
+
+  ngOnDestroy(): void {
+    if (this.initializationSubscription !== null) {
+      this.initializationSubscription.unsubscribe();    
+    }
+  }
+
+  handleSearch(result: IProduct[] | undefined) {
     if (result !== undefined) {
-      this.searchedProducts = result;
+      this.streamOfSearchedProducts$.next(result);
       this.isSearchActive = true;
     }
   }

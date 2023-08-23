@@ -1,44 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom, of, switchMap } from 'rxjs';
-import { IApiProduct } from 'src/app/models/api.models';
-import { ApiService } from 'src/app/services/api/api.service';
+import { Observable, Subscription, mergeMap, of } from 'rxjs';
+import { IProduct } from '../../../models';
+import { ProductService } from '../../../services';
+import { ProductHelper } from 'src/app/classes/product';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
-export class ProductDetailComponent implements OnInit {
-  product: IApiProduct | undefined;
+export class ProductDetailComponent implements OnDestroy {
+  private submitSubscription: Subscription | null = null;
+  product$: Observable<IProduct | undefined> = ProductHelper.formatDate$(this.getProductByParamId());
   
-  constructor(private api: ApiService, private router: Router, private route: ActivatedRoute) {
+  constructor(private productService: ProductService, private router: Router, private route: ActivatedRoute) { }
 
+  private getProductByParamId() {
+    return this.route.paramMap.pipe(mergeMap((params) => {
+      const id = params.get('id')
+      return id ? this.productService.getProduct$(id) : of(undefined);
+    }));
   }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe(async (res) => {
-      const id = res.get('id');
-      console.log(id);
-      if (id !== null) {
-        const products = await lastValueFrom(this.api.getProducts());
-        console.log(products);
-        if (products !== null) {
-          const product = products.find((p) => p.id === id);
-          if (product !== undefined) {
-            this.product = product;
-          }
-        }
-      }
-    })
+  handleSubmit(product: IProduct) {
+    if (this.submitSubscription) {
+      this.submitSubscription.unsubscribe();
+    }
+    
+    this.submitSubscription = this.productService.updateProduct$(product).subscribe((res) => {
+      console.log(res);
+    });
+    // try {
+    //   await lastValueFrom(this.api.updateProduct(product));
+    //   this.router.navigate(['home']);
+    // } catch (err) {
+    //   console.error(err);
+    // }
   }
 
-  async handleSubmit(product: IApiProduct) {
-    try {
-      await lastValueFrom(this.api.updateProduct(product));
-      this.router.navigate(['home']);
-    } catch (err) {
-      console.error(err);
+  ngOnDestroy(): void {
+    if (this.submitSubscription) {
+      this.submitSubscription.unsubscribe();
     }
   }
 }

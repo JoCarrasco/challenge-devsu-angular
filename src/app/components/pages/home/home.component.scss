@@ -1,12 +1,9 @@
 .home-wrapper  {
   padding: 0 30px;
-
+  .cta-tools-row  {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
 }
-
-.cta-tools-row  {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-}
-

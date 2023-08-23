@@ -1,26 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
-import { IApiProduct } from 'src/app/models/api.models';
-import { ApiService } from 'src/app/services/api/api.service';
+import { ProductService } from '../../../services/product/product.service';
+import { Subscription, map } from 'rxjs';
+import { IProduct } from 'src/app/models';
 
 @Component({
   selector: 'app-product-create',
   templateUrl: './product-create.component.html',
   styleUrls: ['./product-create.component.scss']
 })
-export class ProductCreateComponent {
-  constructor(private api: ApiService, private router: Router) {
+export class ProductCreateComponent implements OnDestroy {
+  private submitSubscription: Subscription | null = null;
 
+  constructor(private productService: ProductService, private router: Router) {}
+
+  handleSubmit(product: IProduct) {
+    if (this.submitSubscription) {
+      this.submitSubscription.unsubscribe();
+    }
+
+    this.submitSubscription = this.productService.createProduct$(product).subscribe((res) => {
+      this.router.navigate(['home']);
+    });
   }
 
-  async handleSubmit(product: IApiProduct) {
-    try {
-      await lastValueFrom(this.api.createProduct(product));
-      this.router.navigate(['home']);
-    } catch (err) {
-      console.error(err);
+  isProductIdValid$ = (id: string) => {
+    return this.productService.getProductVerification$(id).pipe(map((isValid) => !isValid))
+  }
+
+  ngOnDestroy(): void {
+    if (this.submitSubscription) {
+      this.submitSubscription.unsubscribe();    
     }
   }
-
 }

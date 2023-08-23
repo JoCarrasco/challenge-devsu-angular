@@ -1,5 +1,5 @@
 
-<table class="table table-bordered table-responsive">
+<table class="table">
   <thead>
     <tr>
       <th>
@@ -23,32 +23,34 @@
       <th></th>
     </tr>
   </thead>
-  <tbody>
-    <tr *ngFor="let product of pagesOfProducts[currentPagination]">
-      <td>
-        <div class="product-logo">
-          <img [src]="product.logo" />
-        </div>
-      </td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.description }}</td>
-      <td>{{ product.date_release | date:"dd/MM/yyyy" }}</td>
-      <td>{{ product.date_revision | date:"dd/MM/yyyy"}}</td>
-      <td>
-        <fa-icon [icon]="faEllipsisVertical" (click)="activeMenuItemId = product.id"></fa-icon>
-        <div class="options-menu" *ngIf="product.id === activeMenuItemId">
-          <button (click)="handleItemAction(product.id, 'delete')">Eliminar</button>
-          <button (click)="handleItemAction(product.id, 'edit')">Editar</button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
+  <ng-container *ngFor="let page of pages$ | async">
+    <tbody *ngIf="isCurrentPage$(page) | async">
+      <tr *ngFor="let product of page.data">
+        <td>
+          <div class="product-logo">
+            <img [src]="product.logo" />
+          </div>
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.date_release | date:"dd/MM/yyyy" }}</td>
+        <td>{{ product.date_revision | date:"dd/MM/yyyy"}}</td>
+        <td>
+          <fa-icon [icon]="faEllipsisVertical" (click)="activeMenuItemId = product.id"></fa-icon>
+          <div class="options-menu" *ngIf="product.id === activeMenuItemId">
+            <button (click)="handleItemAction(product.id, action.Delete)">Eliminar</button>
+            <button (click)="handleItemAction(product.id, action.Edit)">Editar</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </ng-container>
 </table>
 <div class="pagination">
-  <span>{{ products?.length }} Resultados</span>
-  <select (change)="handlePageChange($event)">
-    <option *ngFor="let option of paginationOptions" [value]="option.value">
-      {{ option.name }}
+  <span>{{ totalItems$ | async }} Resultados</span>
+  <select (change)="handlePageChange($event)" [(ngModel)]="currentPageIndex">
+    <option *ngFor="let page of pages$ | async" [value]="page.page">
+      {{ page.page + 1 }}
     </option>
   </select>
 </div>

@@ -1,63 +1,69 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { IApiProduct } from 'src/app/models/api.models';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faEllipsisVertical, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api/api.service';
+import { IPaginatedResourcePage, IProduct } from 'src/app/models';
+import { Observable, of } from 'rxjs';
+import { PaginationHelper } from 'src/app/classes/pagination';
+import { PRODUCT_SETTINGS  as productSettings } from 'src/app/constants';
+
+export enum OnItemActionType {
+  Edit = 'edit',
+  Delete = 'delete'
+};
+
+export interface IProductsTableComponentOnItemAction {
+  action: OnItemActionType,
+  id: string;
+}
 
 @Component({
   selector: 'app-products-table',
   templateUrl: './products-table.component.html',
   styleUrls: ['./products-table.component.scss']
 })
-export class ProductsTableComponent implements OnChanges {
-  @Input() products: IApiProduct[] | null = null;
-  @Output() onChange = new EventEmitter();
+export class ProductsTableComponent {
+  @Input() products$: Observable<IProduct[] | null> = of(null);
+  @Output() onItemAction = new EventEmitter<IProductsTableComponentOnItemAction>();
 
-  constructor(private router: Router, private api: ApiService) { }
+  currentPageIndex: string = '0';
+  
+  constructor() { }
 
   activeMenuItemId: string | undefined;
   faEllipsisVertical = faEllipsisVertical;
   faCircleInfo = faCircleInfo;
-  pagesOfProducts: IApiProduct[][] = [];
-  paginationOptions: { name: number;  value: number}[] = [];
-  currentPagination = 0;
 
-  ngOnChanges(): void {
-    this.paginateProducts();
+  get action() {
+    return OnItemActionType;
   }
 
-  handleItemAction(id: string, action: 'edit' | 'delete') {
-    if (action === 'edit') {
-      this.router.navigate([`product/${id}`]);
-    } else {
-      this.api.deleteProduct(id).then(() => {
-        this.api.updateProductsObs();
-      });
-    }
+  get currentPage(): number {
+    return parseInt(this.currentPageIndex, 10);
   }
 
-  paginateProducts(): void {
-    if (this.products === null) {
-      return;
-    }
+  private paginatedProducts$() {
+    return PaginationHelper.paginate$<IProduct>(this.products$, productSettings.productPerPage);
+  }
 
-    const pageSize = 5;
-    const pageCount = Math.ceil(this.products.length / pageSize);
-  
-    const pages = [];
-    for (let i = 0; i < pageCount; i++) {
-      const startIndex = i * pageSize;
-      const endIndex = startIndex + pageSize;
-  
-      const page = this.products.slice(startIndex, endIndex);
-      this.paginationOptions.push({ name: i + 1, value: i });
-      pages.push(page);
-    }
-  
-    this.pagesOfProducts = pages;
+  get pages$() {
+    return PaginationHelper.getPages$<IProduct>(this.paginatedProducts$());
+  }
+
+  get totalItems$() {
+    return PaginationHelper.getTotalItems$<IProduct>(this.paginatedProducts$());
+  }
+
+  isCurrentPage$(page: IPaginatedResourcePage<IProduct[]>): Observable<boolean> {
+    return PaginationHelper.isCurrentPage$(of(page), this.currentPage);
+  }
+
+  handleItemAction(id: string, action: OnItemActionType) {
+    this.onItemAction.emit({
+      id,
+      action
+    });
   }
 
   handlePageChange(ev: any) {
-    this.currentPagination = ev.target.value;
+    this.currentPageIndex = ev.target.value;
   }
 }

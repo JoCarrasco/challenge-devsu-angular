@@ -1,11 +1,11 @@
 <div class="form-wrapper">
-  <h1>Formulario de {{ product !== undefined ? 'Actualizacion' : 'Registro'}}</h1>
+  <h1>Formulario de {{ isEdit ? 'Actualizacion' : 'Registro'}}</h1>
   <form [formGroup]="productForm" (ngSubmit)="handleSubmit()">
     <hr>
     <div class="fields-wrapper">
-      <div class="form-group brand-field {{ product !== undefined ? 'ds' : '' }}">
+      <div class="form-group brand-field {{ isEdit ? 'ds' : '' }}">
         <label for="id">ID</label>
-        <input type="text" formControlName="id" class="form-control" required [readonly]="product !== undefined ? true : false" [disabled]="true">
+        <input type="text" formControlName="id" class="form-control" required [readonly]="isEdit">
         <div class="error-wrapper" *ngIf="id?.invalid">
           <div *ngIf="id?.errors?.['required']">
             El ID es requerido.
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="form-group brand-field">
-        <label for="logoUrl">Logo</label>
+        <label for="logo">Logo</label>
         <input type="text" formControlName="logo" class="form-control" required>
         <div class="error-wrapper" *ngIf="logo?.invalid">
           <div *ngIf="logo?.errors?.['required']">
@@ -60,10 +60,9 @@
           </div>
         </div>
       </div>
-    
       <div class="form-group brand-field">
         <label for="revisionDate">Fecha de Liberacion</label>
-        <input type="date" formControlName="date_release" [min]="product === undefined ? today : null" class="form-control" required (change)="updateReleaseDate()">
+        <input type="date" formControlName="date_release" [min]="today" class="form-control" required>
         <div class="error-wrapper" *ngIf="date_release?.invalid">
           <div *ngIf="date_release?.errors?.['required']">
             La Fecha de Liberacion es requerida.
@@ -72,12 +71,12 @@
       </div>
       <div class="form-group brand-field ds">
         <label for="releaseDate">Fecha de Revision</label>
-        <input type="date" formControlName="date_revision" class="form-control" readonly [disabled]="true" (onkeydown)="false" required>
+        <input type="date" formControlName="date_revision" class="form-control" readonly required>
       </div>
     </div>
     <div class="cta-group">
       <button class="brand-btn alt-btn" (click)="handleReset()">Reiniciar</button>
-      <button type="submit" class="brand-btn" [disabled]="!this.productForm.valid">{{ product !== undefined ? 'Actualizar' : 'Enviar' }}</button>
+      <button type="submit" class="brand-btn" [disabled]="!this.productForm.valid">{{ isEdit ? 'Actualizar' : 'Enviar' }}</button>
     </div>
   </form>
 </div>
