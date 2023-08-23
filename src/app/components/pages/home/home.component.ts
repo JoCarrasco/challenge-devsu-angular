@@ -28,6 +28,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (itemAction.action === OnItemActionType.Edit) {
       this.router.navigate([`product/${itemAction.id}`]);
     } else if (itemAction.action === OnItemActionType.Delete) {
+      if (this.onDeleteSubscription) {
+        this.onDeleteSubscription.unsubscribe();
+      }
       this.onDeleteSubscription = this.productService.deleteProduct$(itemAction.id).subscribe((res) => {
        //
       }, (err) => {
@@ -55,6 +58,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.initializationSubscription !== null) {
       this.initializationSubscription.unsubscribe();    
+    }
+    if (this.onDeleteSubscription !== null) {
+      this.onDeleteSubscription.unsubscribe();    
     }
   }
 
