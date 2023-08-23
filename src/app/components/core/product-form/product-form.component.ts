@@ -1,3 +1,4 @@
+import { ProductHelper } from 'src/app/classes/product';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Subscription, map, of } from 'rxjs';
@@ -156,15 +157,15 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   handleSubmit() {
     if (this.productForm.valid) {
       const product: IProduct = {
-        id: this.id!.value!,
-        name: this.name!.value!,
-        description: this.description!.value!,
-        logo: this.logo!.value!,
-        date_release: this.date_release!.value!,
-        date_revision: this.date_revision!.value!,
+        id: this.id.value!,
+        name: this.name.value!,
+        description: this.description.value!,
+        logo: this.logo.value!,
+        date_release: this.date_release.value!,
+        date_revision: this.date_revision.value!,
       };
 
-      this.onSubmit.emit(product);
+      this.onSubmit.emit(ProductHelper.rollbackFormat(product));
     }
   }
 

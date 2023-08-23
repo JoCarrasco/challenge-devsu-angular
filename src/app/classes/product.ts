@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { IProduct } from "../models";
 import { Observable, map } from "rxjs";
 
@@ -8,6 +8,12 @@ export class ProductHelper {
   static formatDate(product: IProduct): IProduct {
     product.date_release = format(new Date(product.date_release), defaultDateInputFormat);
     product.date_revision = format(new Date(product.date_revision), defaultDateInputFormat);
+    return product;
+  }
+  
+  static rollbackFormat(product: IProduct): IProduct {
+    product.date_release = formatISO(new Date(product.date_release));
+    product.date_revision = formatISO(new Date(product.date_revision));
     return product;
   }
 

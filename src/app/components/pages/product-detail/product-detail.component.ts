@@ -28,15 +28,9 @@ export class ProductDetailComponent implements OnDestroy {
       this.submitSubscription.unsubscribe();
     }
     
-    this.submitSubscription = this.productService.updateProduct$(product).subscribe((res) => {
-      console.log(res);
+    this.submitSubscription = this.productService.updateProduct$(product).subscribe(() => {
+      this.router.navigate(['home']);
     });
-    // try {
-    //   await lastValueFrom(this.api.updateProduct(product));
-    //   this.router.navigate(['home']);
-    // } catch (err) {
-    //   console.error(err);
-    // }
   }
 
   ngOnDestroy(): void {
