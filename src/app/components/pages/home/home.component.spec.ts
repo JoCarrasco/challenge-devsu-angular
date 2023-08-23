@@ -12,7 +12,6 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async () => {
-    // Configure the testing module
     await TestBed.configureTestingModule({
       imports: [HttpClientModule, FormsModule, RouterTestingModule.withRoutes([]), FontAwesomeModule],
       declarations: [HomeComponent, SearchComponent, ProductsTableComponent],
@@ -20,7 +19,6 @@ describe('HomeComponent', () => {
   });
 
   beforeEach(() => {
-    // Create the component fixture
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
