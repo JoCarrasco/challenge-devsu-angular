@@ -57,7 +57,6 @@ describe('ProductFormComponent', () => {
     });
 
     fixture.detectChanges();
-    console.log(component.productForm.errors);
 
     expect(component.productForm).toBeTruthy();
 

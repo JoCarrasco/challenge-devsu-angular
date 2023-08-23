@@ -10,12 +10,8 @@ export class ProductHelper {
   private static defaultFormat = productSettings.dateTableFormat;
 
   static formatDate(product: IProduct, formatStr: string = this.defaultFormat): IProduct {
-    const mock = new Date(product.date_release);
-    const mockUpdated = DateTimeHelper.changeLocalTz(mock);
-    console.log(mock, mockUpdated);
     product.date_release = format(DateTimeHelper.changeLocalTz(new Date(product.date_release)), formatStr);
     product.date_revision = format(DateTimeHelper.changeLocalTz(new Date(product.date_revision)), formatStr);
-    console.log(product);
     return product;
   }
 
