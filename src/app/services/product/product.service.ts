@@ -3,6 +3,7 @@ import { Observable, map } from 'rxjs';
 import { ApiService } from '../api/api.service';
 import { IProduct } from '../../models';
 import { PRODUCTS_ENDPOINTS as endpoints} from '../../constants';
+import { OperationsHelper } from 'src/app/classes/operations';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,9 @@ export class ProductService {
 
   deleteProduct$(id: string) {
     return this.api.delete(endpoints.product(id));
+  }
+
+  searchProducts$(query: string, queryByPropNames: string[]): Observable<IProduct[]> {
+    return this.getProducts$().pipe(map((products) => OperationsHelper.searchByPropNames<IProduct>(query, products, queryByPropNames)));
   }
 }

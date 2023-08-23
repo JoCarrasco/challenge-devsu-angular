@@ -33,8 +33,8 @@
         </td>
         <td>{{ product.name }}</td>
         <td>{{ product.description }}</td>
-        <td>{{ product.date_release | date:"dd/MM/yyyy" }}</td>
-        <td>{{ product.date_revision | date:"dd/MM/yyyy"}}</td>
+        <td>{{ product.date_release }}</td>
+        <td>{{ product.date_revision }}</td>
         <td>
           <fa-icon [icon]="faEllipsisVertical" (click)="activeMenuItemId = product.id"></fa-icon>
           <div class="options-menu" *ngIf="product.id === activeMenuItemId">

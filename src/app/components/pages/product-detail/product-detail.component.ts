@@ -15,8 +15,8 @@ export class ProductDetailComponent implements OnDestroy {
   product$: Observable<IProduct | undefined> = ProductHelper.formatDate$(this.getProductByParamId());
   
   constructor(private productService: ProductService, private router: Router, private route: ActivatedRoute) { }
-
-  private getProductByParamId() {
+  
+  getProductByParamId() {
     return this.route.paramMap.pipe(mergeMap((params) => {
       const id = params.get('id')
       return id ? this.productService.getProduct$(id) : of(undefined);
@@ -29,8 +29,12 @@ export class ProductDetailComponent implements OnDestroy {
     }
     
     this.submitSubscription = this.productService.updateProduct$(product).subscribe(() => {
-      this.router.navigate(['home']);
+      this.goHome();
     });
+  }
+
+  goHome() {
+    this.router.navigate(['home']);
   }
 
   ngOnDestroy(): void {

@@ -1,14 +1,26 @@
-import { format, formatISO } from "date-fns";
+import { DateTimeHelper } from 'src/app/classes/datetime';
+import { add, format, formatISO, parse } from "date-fns";
 import { IProduct } from "../models";
 import { Observable, map } from "rxjs";
+import { PRODUCT_SETTINGS as productSettings } from '../constants';
 
-const defaultDateInputFormat = 'yyyy-MM-dd';
+
 
 export class ProductHelper {
-  static formatDate(product: IProduct): IProduct {
-    product.date_release = format(new Date(product.date_release), defaultDateInputFormat);
-    product.date_revision = format(new Date(product.date_revision), defaultDateInputFormat);
+  private static defaultFormat = productSettings.dateTableFormat;
+
+  static formatDate(product: IProduct, formatStr: string = this.defaultFormat): IProduct {
+    const mock = new Date(product.date_release);
+    const mockUpdated = DateTimeHelper.changeLocalTz(mock);
+    console.log(mock, mockUpdated);
+    product.date_release = format(DateTimeHelper.changeLocalTz(new Date(product.date_release)), formatStr);
+    product.date_revision = format(DateTimeHelper.changeLocalTz(new Date(product.date_revision)), formatStr);
+    console.log(product);
     return product;
+  }
+
+  static formatGroup(products: IProduct[], formatStr: string = this.defaultFormat) {
+    return products.map((product) => this.formatDate(product, formatStr));
   }
   
   static rollbackFormat(product: IProduct): IProduct {
@@ -23,11 +35,14 @@ export class ProductHelper {
         return p
       }
       
-      p.date_release = format(new Date(p.date_release), defaultDateInputFormat);
-      p.date_revision = format(new Date(p.date_revision), defaultDateInputFormat);
-      console.log(p);
-      return p;
+      return this.formatDate(p);
     }))
+  }
+
+  static addOneYearStr(str: string): string {
+    const inputFormat = productSettings.dateInputFormat;
+    const date = parse(str, inputFormat, new Date());
+    return format(add(date, { years: 1 }), inputFormat);
   }
 }
 

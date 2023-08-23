@@ -1,3 +1,4 @@
+import { ProductHelper } from 'src/app/classes/product';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -12,14 +13,16 @@ import { IProduct } from 'src/app/models';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private onDeleteSubscription: Subscription | null = null;
+  private onSearchSubscription: Subscription | null = null;
   private initializationSubscription: Subscription | null = null;
-  searchByProps = ['name', 'description'];
+
+  private queryByPropNames = ['name', 'description'];
 
   private streamOfProducts$ = new BehaviorSubject<IProduct[] | null>(null);
   private streamOfSearchedProducts$ = new BehaviorSubject<IProduct[] | null>(null);
+
   products$ = this.streamOfProducts$.asObservable();
   searchedProducts$ = this.streamOfSearchedProducts$.asObservable();
-
   isSearchActive: boolean = false;
 
   constructor(private productService: ProductService, public router: Router) { }
@@ -46,8 +49,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.initializationSubscription.unsubscribe();
     }
 
-    this.initializationSubscription = this.productService.getProducts$().subscribe((res) => {
-      this.streamOfProducts$.next(res);
+    this.initializationSubscription = this.productService.getProducts$().subscribe((products) => {
+      this.streamOfProducts$.next(ProductHelper.formatGroup(products));
     })
   }
 
@@ -62,12 +65,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.onDeleteSubscription !== null) {
       this.onDeleteSubscription.unsubscribe();    
     }
+    if (this.onSearchSubscription !== null) {
+      this.onSearchSubscription.unsubscribe();    
+    }
   }
 
-  handleSearch(result: IProduct[] | undefined) {
+  handleSearch(result: string | undefined) {
     if (result !== undefined) {
-      this.streamOfSearchedProducts$.next(result);
-      this.isSearchActive = true;
+      if (this.onSearchSubscription) {
+        this.onSearchSubscription.unsubscribe();;
+      }
+      this.onSearchSubscription = this.productService.searchProducts$(result, this.queryByPropNames).subscribe((searchResult) => {
+        this.streamOfSearchedProducts$.next(ProductHelper.formatGroup(searchResult));
+        this.isSearchActive = true;
+      });
     }
   }
 

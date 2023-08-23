@@ -1,9 +1,9 @@
-import { ProductHelper } from 'src/app/classes/product';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Subscription, map, of } from 'rxjs';
 import { DateTimeHelper } from '../../../classes/datetime';
-import { IProduct } from 'src/app/models';
+import { ProductHelper } from '../../../classes/product';
+import { IProduct } from '../../../models';
 
 interface IProductForm {
   id: FormControl<string | null>;
@@ -110,7 +110,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   }
 
   private setDateReleaseWatcher() {
-    const { addOneYearStr } = DateTimeHelper;
+    const { addOneYearStr } = ProductHelper;
     this.dateReleaseSubscription = this.date_release.valueChanges.subscribe((value) => {
       if (value) {
         this.date_revision.setValue(addOneYearStr(value))
@@ -118,7 +118,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setValues(product: IProduct | undefined | null) {
+  setValues(product: IProduct | undefined | null) {
     this.id.setValue(product?.id || '')
     this.name.setValue(product?.name || '')
     this.description.setValue(product?.description || '')

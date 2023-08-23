@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faEllipsisVertical, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { IPaginatedResourcePage, IProduct } from 'src/app/models';
-import { Observable, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { PaginationHelper } from 'src/app/classes/pagination';
 import { PRODUCT_SETTINGS  as productSettings } from 'src/app/constants';
 
@@ -20,17 +20,35 @@ export interface IProductsTableComponentOnItemAction {
   templateUrl: './products-table.component.html',
   styleUrls: ['./products-table.component.scss']
 })
-export class ProductsTableComponent {
+export class ProductsTableComponent implements OnInit, OnDestroy {  
   @Input() products$: Observable<IProduct[] | null> = of(null);
   @Output() onItemAction = new EventEmitter<IProductsTableComponentOnItemAction>();
 
+  private productsSubscription: Subscription | null = null;
+
   currentPageIndex: string = '0';
-  
-  constructor() { }
 
   activeMenuItemId: string | undefined;
   faEllipsisVertical = faEllipsisVertical;
   faCircleInfo = faCircleInfo;
+  
+  constructor() { }
+  
+  ngOnInit(): void {
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();
+    }
+
+    this.productsSubscription = this.products$.subscribe(() => {
+      this.setPage('0');
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();    
+    }
+  }
 
   get action() {
     return OnItemActionType;
@@ -52,6 +70,10 @@ export class ProductsTableComponent {
     return PaginationHelper.getTotalItems$<IProduct>(this.paginatedProducts$());
   }
 
+  setPage(index: string) {
+    this.currentPageIndex = index;
+  }
+
   isCurrentPage$(page: IPaginatedResourcePage<IProduct[]>): Observable<boolean> {
     return PaginationHelper.isCurrentPage$(of(page), this.currentPage);
   }
@@ -64,6 +86,6 @@ export class ProductsTableComponent {
   }
 
   handlePageChange(ev: any) {
-    this.currentPageIndex = ev.target.value;
+    this.setPage(ev.target.value);
   }
 }

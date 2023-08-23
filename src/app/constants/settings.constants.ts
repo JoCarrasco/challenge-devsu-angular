@@ -1,5 +1,8 @@
 export const DEFAULT_PRODUCT_PER_PAGE = 5;
-
+export const DEFAULT_PRODUCT_DATE_INPUT_FORMAT = 'yyyy-MM-dd';
+export const DEFAULT_PRODUCT_DATE_TABLE_FORMAT = 'dd/MM/yyyy';
 export const PRODUCT_SETTINGS = {
-  productPerPage: DEFAULT_PRODUCT_PER_PAGE
+  productPerPage: DEFAULT_PRODUCT_PER_PAGE,
+  dateInputFormat: DEFAULT_PRODUCT_DATE_INPUT_FORMAT,
+  dateTableFormat: DEFAULT_PRODUCT_DATE_TABLE_FORMAT 
 }

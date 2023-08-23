@@ -19,9 +19,13 @@ export class ProductCreateComponent implements OnDestroy {
       this.submitSubscription.unsubscribe();
     }
 
-    this.submitSubscription = this.productService.createProduct$(product).subscribe((res) => {
-      this.router.navigate(['home']);
+    this.submitSubscription = this.productService.createProduct$(product).subscribe(() => {
+      this.goHome();
     });
+  }
+
+  goHome() {
+    this.router.navigate(['home']);
   }
 
   isProductIdValid$ = (id: string) => {
